@@ -122,6 +122,7 @@
         height: 25px;
         width: 25px;
         margin-right: 3px;
+        cursor: pointer;
       }
       .volume {
         background-position: -2px -248px;
@@ -129,6 +130,10 @@
       .playlist {
         width: 59px;
         background-position: -42px -68px;
+        color: #666;
+        line-height: 27px;
+        padding-left: 21px;
+        text-align: center;
       }
       .icn-loop {
         background-position: -3px -344px;
