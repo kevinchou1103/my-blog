@@ -1,0 +1,145 @@
+.blog-music {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 52px;
+  background-repeat: repeat;
+  .content{
+    margin: 0 auto;
+    display: flex;
+    width: 980px;
+    height: 100%;
+    justify-content: space-between;
+    .control {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      .prev, .next, .play {
+        // background-color: #000;
+        width: 28px;
+        height: 28px;
+        background-repeat: no-repeat;
+        cursor: pointer;
+      }
+      .prev {
+        background-position: 0 -130px;
+      }
+      .next {
+        background-position: -80px -130px;
+      }
+      .play {
+        width: 36px;
+        height: 36px;
+        margin: 0 8px;
+        background-position: 0 -204px;
+      }
+      .pause {
+        width: 36px;
+        height: 36px;
+        margin: 0 8px;
+        background-position: 0 -165px;
+      }
+    }
+    .detail {
+      width: 550px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      .d-image {
+        width: 35px;
+        height: 35px;
+        margin: 6px 15px 0 0;
+      }
+      .d-info {
+        .song {
+          margin-top: 10px;
+          span {
+            font-size: 12px;
+            color: #fff;
+            margin-right: 12px;
+          }
+          a{
+            font-size: 12px;
+            color: #9b9b9b;
+          }
+        }
+        .progress {
+          width: 500px;
+          display: flex;
+          height: 22px;
+          .ant-slider {
+            width: 490px;
+            margin: 0px 0px 10px;
+            height: 100%;
+            .ant-slider-rail, .ant-slider-track {
+              height: 9px;
+              background-image: url("~@/assets/img/progress_bar.png");
+              background-repeat: no-repeat;
+            }
+            .ant-slider-rail {
+              background-position: 5px -30px;
+              // background: url("~@/assets/img/progress_bar.png") right 0;
+            }
+    
+            .ant-slider-track {
+              background-position: 0 -66px;
+              // background: url("~@/assets/img/progress_bar.png") left -66px;
+            }
+    
+            .ant-slider-handle {
+              width: 18px;
+              height: 18px;
+              border: none;
+              margin-top: -5px;
+              background-image: url("~@/assets/img/sprite_icon.png");
+              background-repeat: no-repeat;
+              background-position: -2px -252px;
+              // background: url("~@/assets/img/sprite_icon.png") 0 -250px;
+            }
+          }
+          .time {
+            font-size: 12px;
+            height: 100%;
+            margin-left: 20px;
+            color: #797979;
+            .now-time {
+              color: #a1a1a1;
+            }
+            .divider {
+              margin: 0 3px;
+            }
+          }
+        }
+      }
+    }
+    .setting {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      width: 126px;
+      span {
+        height: 25px;
+        width: 25px;
+        margin-right: 3px;
+      }
+      .volume {
+        background-position: -2px -248px;
+      }
+      .playlist {
+        width: 59px;
+        background-position: -42px -68px;
+      }
+      .icn-loop {
+        background-position: -3px -344px;
+      }
+      .icn-one {
+        background-position: -66px -344px;
+      }
+      .icn-shuffle {
+        background-position: -66px -248px;
+      }
+    }
+  }
+  
+}
