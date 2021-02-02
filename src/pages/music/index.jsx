@@ -19,10 +19,12 @@ export default memo(function BlogMusic() {
   const [currentTime, setCurrentTime] = useState(0)
   const [progress, setProgress] = useState(0)
   const [isChange, setIsChange] = useState(false)
-  const [songsId, setSongId] = useState(1349292048)
-  const [showList, setShowList] = useState(true)
+  const [songsId, setSongId] = useState(0)
+  const [showList, setShowList] = useState(false)
   const [list1, setList1] = useState([])
   const [list2, setList2] = useState([])
+  const [currentList, setCurrentList] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
   
   const imgUrl = (audioData.al && audioData.al.picUrl) || '';
   const singerName = (audioData.ar && audioData.ar[0].name) || '未知'
@@ -40,6 +42,7 @@ export default memo(function BlogMusic() {
       }
     }).then(res => {
       setList1(res.playlist.tracks)
+      setSongId(res.playlist.tracks[0].id)
     })
     // 新歌榜
     MusicRequest({
@@ -57,17 +60,19 @@ export default memo(function BlogMusic() {
   },[])
 
   useEffect(() => {
-    audioRef.current.src = getPlaySong(songsId)
-    MusicRequest({
-      url: `/song/detail`,
-      data: {
-        ids: songsId
-      }
-    }).then(res => {
-      // console.log(res.songs[0])
-      setAudioData(res.songs[0])
-      playMusic()
-    })
+    if(list1.length) {
+      audioRef.current.src = getPlaySong(songsId)
+      MusicRequest({
+        url: `/song/detail`,
+        data: {
+          ids: songsId
+        }
+      }).then(res => {
+        // console.log(res.songs[0])
+        setAudioData(res.songs[0])
+        playMusic()
+      })
+    }
   }, [songsId])
 
   const playMusic = useCallback(() => {
@@ -94,8 +99,23 @@ export default memo(function BlogMusic() {
       playMusic()
     }
   })
-  const changeMusic = useCallback((value) => {
+  const endPlaying = useCallback(() => {
     setPlaying(false)
+    let list = currentList === 0 ? list1 : list2
+    let id
+    if (currentIndex === list.length) {
+      setCurrentIndex(0)
+      id = list[currentIndex + 1].id
+    } else {
+      setCurrentIndex(currentIndex + 1)
+      id = list[currentIndex + 1].id
+    }
+    setSongId(id)
+  })
+  const changeMusic = useCallback((value,list,index) => {
+    setPlaying(false)
+    setCurrentList(list)
+    setCurrentIndex(index)
     setSongId(value)
   })
 
@@ -137,13 +157,15 @@ export default memo(function BlogMusic() {
         </div>
         <audio ref={audioRef} 
           onTimeUpdate={e => updateTime(e)}
-          onEnded={e => setPlaying(false)}/>
+          onEnded={e => endPlaying()}/>
       </div>
       {
         showList ? 
         <MusicList 
           list = {[list1,list2]}
           changeMusic = {changeMusic}
+          musicList = {currentList}
+          musicIndex = {currentIndex}
         />: ''
       }
     </div>

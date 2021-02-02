@@ -1,4 +1,4 @@
-import React, { memo , useState} from 'react'
+import React, { memo , useState, useEffect} from 'react'
 import {
   formatDate,
 } from '@/utils/format-utils'
@@ -6,14 +6,26 @@ import {
 import './index.scss'
 
 export default memo(function Index(props) {
-  const { list, changeMusic } = props
-  function chooseMusic(id) {
+  const { 
+    list, 
+    changeMusic, 
+    musicList , 
+    musicIndex  
+  } = props
+  function chooseMusic(id,i,index) {
     console.log(id)
-    setCurrentId(id)
-    changeMusic(id)
+    setCurrentList(i)
+    setCurrentIndex(index)
+    changeMusic(id,i,index)
   }
 
-  const [currentId, setCurrentId] = useState(0)
+  const [currentList, setCurrentList] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    setCurrentList(musicList)
+    setCurrentIndex(musicIndex)
+  }, [musicList,musicIndex])
 
   return (
     <div className="music-list-box">
@@ -28,11 +40,11 @@ export default memo(function Index(props) {
               return (
                 <ul key={i}>
                   {
-                    v.map(item => {
+                    v.map((item,index) => {
                       return (
                         <li key={item.id} 
-                            onClick={_=>chooseMusic(item.id)}
-                            className={currentId === item.id ? 'active' : ''}>
+                            onClick={_=>chooseMusic(item.id,i,index)}
+                            className={(currentList === i && currentIndex === index) ? 'active' : ''}>
                           <div>{item.name}</div>
                           <div>{item.ar[0].name}</div>
                           <div>{formatDate(item.dt, "mm:ss")}</div>
