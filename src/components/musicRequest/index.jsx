@@ -7,12 +7,12 @@ axios.defaults.timeout = params.time_out
 function request(option = {}) {
   return new Promise((resolve, reject) => {
     let method = (option.type || 'get').toLowerCase() // 转换为小写
-    let data = method === 'get'? {param: option.data} : option.data
+    let data = method === 'get'? {params: option.data} : option.data
     let url = option.url
 
     axios[method](url,data).then(
       res => {
-        console.log(res)
+        // console.log(res)
         resolve(res.data)
       }
     ).catch(

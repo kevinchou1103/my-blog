@@ -1,30 +1,48 @@
-import React, { memo } from 'react'
+import React, { memo , useState} from 'react'
+import {
+  formatDate,
+} from '@/utils/format-utils'
 
 import './index.scss'
 
-export default memo(function index() {
+export default memo(function Index(props) {
+  const { list, changeMusic } = props
+  function chooseMusic(id) {
+    console.log(id)
+    setCurrentId(id)
+    changeMusic(id)
+  }
+
+  const [currentId, setCurrentId] = useState(0)
+
   return (
     <div className="music-list-box">
       <div className="music-list">
         <div className="list-title">
-          播放列表（5）
+          <div>热歌榜单（{list[0].length}）</div>
+          <div>新歌榜单（{list[1].length}）</div>
         </div>
         <div className="list-content">
-          <ul>
-            <li className="active">
-              <div>星辰大海</div>
-              <div>黄霄雲</div>
-              <div>03:27</div>
-            </li>
-            <li>有何不可</li>
-            <li>后来</li>
-          </ul>
-          <div className="line"></div>
-          <ul>
-            <li className="active">星辰大海</li>
-            <li>有何不可</li>
-            <li>后来</li>
-          </ul>
+          {
+            list.map((v,i) => {
+              return (
+                <ul key={i}>
+                  {
+                    v.map(item => {
+                      return (
+                        <li key={item.id} 
+                            onClick={_=>chooseMusic(item.id)}
+                            className={currentId === item.id ? 'active' : ''}>
+                          <div>{item.name}</div>
+                          <div>{item.ar[0].name}</div>
+                          <div>{formatDate(item.dt, "mm:ss")}</div>
+                        </li>)
+                    })
+                  }
+                </ul>
+              )
+            })
+          }
         </div>
       </div>
     </div>

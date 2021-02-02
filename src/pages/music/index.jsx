@@ -21,17 +21,52 @@ export default memo(function BlogMusic() {
   const [isChange, setIsChange] = useState(false)
   const [songsId, setSongId] = useState(1349292048)
   const [showList, setShowList] = useState(true)
+  const [list1, setList1] = useState([])
+  const [list2, setList2] = useState([])
   
   const imgUrl = (audioData.al && audioData.al.picUrl) || '';
   const singerName = (audioData.ar && audioData.ar[0].name) || '未知'
 
   useEffect(() => {
+    // 热歌榜单
+    MusicRequest({
+      // url: `/playlist/detail/dynamic`,
+      // data: {
+      //   id:3778678
+      // }
+      url: '/top/list',
+      data: {
+        idx: 1
+      }
+    }).then(res => {
+      setList1(res.playlist.tracks)
+    })
+    // 新歌榜
+    MusicRequest({
+      // url: `/playlist/detail/dynamic`,
+      // data: {
+      //   id:3779629
+      // }
+      url: '/top/list',
+      data: {
+        idx: 0
+      }
+    }).then(res => {
+      setList2(res.playlist.tracks)
+    })
+  },[])
+
+  useEffect(() => {
     audioRef.current.src = getPlaySong(songsId)
     MusicRequest({
-      url: `/song/detail?ids=${songsId}`
+      url: `/song/detail`,
+      data: {
+        ids: songsId
+      }
     }).then(res => {
-      console.log(res.songs[0])
+      // console.log(res.songs[0])
       setAudioData(res.songs[0])
+      playMusic()
     })
   }, [songsId])
 
@@ -59,7 +94,11 @@ export default memo(function BlogMusic() {
       playMusic()
     }
   })
-  
+  const changeMusic = useCallback((value) => {
+    setPlaying(false)
+    setSongId(value)
+  })
+
   return (
     <div className="blog-music sprite_player">
       <div className="content">
@@ -93,7 +132,7 @@ export default memo(function BlogMusic() {
           <span className="sprite_player volume"></span>
           <span className="sprite_player icn-loop"></span>
           <span className="sprite_player playlist" onClick={_ => setShowList(!showList)}>
-            3
+            {list1.length + list2.length}
           </span>
         </div>
         <audio ref={audioRef} 
@@ -103,7 +142,8 @@ export default memo(function BlogMusic() {
       {
         showList ? 
         <MusicList 
-
+          list = {[list1,list2]}
+          changeMusic = {changeMusic}
         />: ''
       }
     </div>
