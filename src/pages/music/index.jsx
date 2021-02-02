@@ -1,7 +1,7 @@
 import React, { memo, useRef, useEffect, useState, useCallback } from 'react';
 import { Slider } from 'antd';
 import classNames from 'classnames';
-import request from "@/components/request";
+import MusicRequest from "@/components/musicRequest";
 
 import './index.scss'
 import {
@@ -27,7 +27,7 @@ export default memo(function BlogMusic() {
 
   useEffect(() => {
     audioRef.current.src = getPlaySong(songsId)
-    request({
+    MusicRequest({
       url: `/song/detail?ids=${songsId}`
     }).then(res => {
       console.log(res.songs[0])
