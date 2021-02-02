@@ -1,9 +1,6 @@
 export function getPlaySong(id) {
   return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
 }
-export function getSongDetail(id) {
-  return `http://123.207.32.32:9001/song/detail?ids=${id}`;
-}
 export function getSizeImage(imgUrl, size) {
   return `${imgUrl}?param=${size}x${size}`;
 }

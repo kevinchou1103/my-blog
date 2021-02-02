@@ -1,15 +1,16 @@
 import React, { memo, useRef, useEffect, useState, useCallback } from 'react';
 import { Slider } from 'antd';
 import classNames from 'classnames';
-import axios from 'axios'
+import request from "@/components/request";
 
 import './index.scss'
 import {
   getPlaySong,
   formatDate,
-  getSizeImage,
-  getSongDetail
+  getSizeImage
 } from '@/utils/format-utils'
+
+import MusicList from "./music-list";
 
 export default memo(function BlogMusic() {
   const audioRef = useRef()
@@ -19,15 +20,18 @@ export default memo(function BlogMusic() {
   const [progress, setProgress] = useState(0)
   const [isChange, setIsChange] = useState(false)
   const [songsId, setSongId] = useState(1349292048)
+  const [showList, setShowList] = useState(true)
   
   const imgUrl = (audioData.al && audioData.al.picUrl) || '';
   const singerName = (audioData.ar && audioData.ar[0].name) || '未知'
 
   useEffect(() => {
     audioRef.current.src = getPlaySong(songsId)
-    axios.get(getSongDetail(songsId)).then(res => {
-      console.log(res.data.songs[0])
-      setAudioData(res.data.songs[0])
+    request({
+      url: `/song/detail?ids=${songsId}`
+    }).then(res => {
+      console.log(res.songs[0])
+      setAudioData(res.songs[0])
     })
   }, [songsId])
 
@@ -55,7 +59,7 @@ export default memo(function BlogMusic() {
       playMusic()
     }
   })
-
+  
   return (
     <div className="blog-music sprite_player">
       <div className="content">
@@ -88,7 +92,7 @@ export default memo(function BlogMusic() {
         <div className="setting">
           <span className="sprite_player volume"></span>
           <span className="sprite_player icn-loop"></span>
-          <span className="sprite_player playlist">
+          <span className="sprite_player playlist" onClick={_ => setShowList(!showList)}>
             3
           </span>
         </div>
@@ -96,6 +100,12 @@ export default memo(function BlogMusic() {
           onTimeUpdate={e => updateTime(e)}
           onEnded={e => setPlaying(false)}/>
       </div>
+      {
+        showList ? 
+        <MusicList 
+
+        />: ''
+      }
     </div>
   )
 })
