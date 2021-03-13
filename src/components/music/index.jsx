@@ -12,20 +12,26 @@ import {
 
 import MusicList from "./music-list";
 
+let showLoopTextTimer = null // 循环提示文字延时关闭
+
 export default memo(function BlogMusic() {
   const audioRef = useRef()
   const [playing, setPlaying] = useState(false)
-  const [audioData, setAudioData] = useState({})
-  const [currentTime, setCurrentTime] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [isChange, setIsChange] = useState(false)
-  const [songsId, setSongId] = useState(0)
+  const [audioData, setAudioData] = useState({}) // 获取到的音乐信息
+  const [currentTime, setCurrentTime] = useState(0) // 当前音乐已播放时长
+  const [progress, setProgress] = useState(0) // 音乐进度条
+  const [isChange, setIsChange] = useState(false) // 音乐进度条是否在改变中
+  const [songsId, setSongId] = useState(0) // 当前音乐ID
   const [showList, setShowList] = useState(false)
   const [list1, setList1] = useState([])
   const [list2, setList2] = useState([])
-  const [currentList, setCurrentList] = useState(0)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  
+  const [currentList, setCurrentList] = useState(0) // 当前音乐列表
+  const [currentIndex, setCurrentIndex] = useState(0) // 当前音乐列表歌曲
+  const [loopType, setLoopType] = useState(0)  // 音乐循环 0列表循环 1单曲循环 2随机循环
+  const [showLoopText, setShowLoopText] = useState(false)
+  const [volumeValue, setVolumeValue] = useState(100) // 当前音乐音量
+  const [showVolumeProcess, setShowVolumeProcess] = useState(false)
+
   const imgUrl = (audioData.al && audioData.al.picUrl) || '';
   const singerName = (audioData.ar && audioData.ar[0].name) || '未知'
 
@@ -75,22 +81,36 @@ export default memo(function BlogMusic() {
     }
   }, [songsId])
 
-  const playMusic = useCallback(() => {
-      playing ? audioRef.current.pause() : audioRef.current.play();
-      setPlaying(!playing)
-    },[playing])
-  const updateTime = useCallback((e) => {
+  useEffect(() => {
+    if(list1.length) {
+      setShowLoopText(true)
+      if (showLoopTextTimer != null) {
+        clearTimeout(showLoopTextTimer)
+      }
+      showLoopTextTimer = setTimeout(() => {
+        setShowLoopText(false)
+      }, 2000)
+    }
+  },[loopType])
+
+  const playMusic = () => {
+    playing ? audioRef.current.pause() : audioRef.current.play();
+    setPlaying(!playing)
+  }
+
+  const updateTime = (e) => {
     setCurrentTime(e.target.currentTime*1000)
     if(!isChange){
       setProgress(e.target.currentTime*1000*100 / audioData.dt)
     }
-  })
-  const sliderChange = useCallback((value) => {
+  }
+  const sliderChange = (value) => {
     setIsChange(true)
     setCurrentTime(value / 100 * audioData.dt)
     setProgress(value)
-  })
-  const sliderAfterChange = useCallback((value) => {
+  }
+
+  const sliderAfterChange = (value) => {
     const currentTime = value / 100 * audioData.dt / 1000
     setCurrentTime(currentTime * 1000)
     audioRef.current.currentTime = currentTime
@@ -98,38 +118,62 @@ export default memo(function BlogMusic() {
     if (!playing) {
       playMusic()
     }
-  })
-  const endPlaying = useCallback(() => {
-    setPlaying(false)
-    let list = currentList === 0 ? list1 : list2
-    let id
-    if (currentIndex === list.length) {
-      setCurrentIndex(0)
-      id = list[currentIndex + 1].id
+  }
+  const endPlaying = () => {
+    if(loopType === 1) {
+      audioRef.current.play();
+      setPlaying(true)
     } else {
-      setCurrentIndex(currentIndex + 1)
-      id = list[currentIndex + 1].id
+      playPreMusic('next')
     }
-    setSongId(id)
-  })
-  const changeMusic = useCallback((value,list,index) => {
-    setPlaying(false)
+  }
+  const changeMusic = (value,list,index) => {
+    if(value !== songsId) {
+      setPlaying(false)
+      setSongId(value)
+    }
     setCurrentList(list)
     setCurrentIndex(index)
-    setSongId(value)
-  })
+  }
+  const playPreMusic = (type) => {
+    let list = currentList === 0 ? list1 : list2
+    let index = 0
+    let len = list.length - 1
+    if(loopType === 2) {
+      let num = parseInt(Math.random() * len) + 1
+      index = num === currentIndex ? len : num
+    } else {
+      switch (type) {
+        case 'pre':
+          index = currentIndex === 0 ? len : currentIndex - 1
+          break;
+        case 'next':
+          index = currentIndex === len ? 0 : currentIndex + 1
+          break;
+        default :
+          index = currentIndex
+      }
+    }
+    setPlaying(false)
+    setCurrentIndex(index)
+    setSongId(list[index].id)
+  }
+  const volumeChange = (value) => {
+    setVolumeValue(value)
+    audioRef.current.volume = value / 100;
+  }
 
   return (
     <div className="blog-music sprite_player">
       <div className="content">
         <div className="control">
-          <span className="prev sprite_player"></span>
+          <span className="prev sprite_player" onClick={e => playPreMusic('pre')}></span>
           <span className={classNames(playing ? 'pause' : 'play',"play sprite_player")} onClick={e => playMusic()}></span>
-          <span className="next sprite_player"></span>
+          <span className="next sprite_player" onClick={e => playPreMusic('next')}></span>
         </div>
         <div className="detail">
           <div className="d-image">
-            <img src={getSizeImage(imgUrl, 35)}/>
+            <img src={getSizeImage(imgUrl, 35)} onClick={_ => setShowList(!showList)}/>
           </div>   
           <div className="d-info">
             <div className="song">
@@ -149,11 +193,25 @@ export default memo(function BlogMusic() {
           </div>       
         </div>
         <div className="setting">
-          <span className="sprite_player volume"></span>
-          <span className="sprite_player icn-loop"></span>
+          <span className="sprite_player volume" onClick = {_ => setShowVolumeProcess(!showVolumeProcess)}></span>
+          <span className={classNames(loopType === 0 ? "icn-loop" : loopType === 1 ? "icn-one" : "icn-shuffle"
+            ,"sprite_player")} onClick={e => setLoopType(_ => loopType === 2 ? 0 : loopType + 1)}></span>
           <span className="sprite_player playlist" onClick={_ => setShowList(!showList)}>
             {list1.length + list2.length}
           </span>
+          {
+            showLoopText ? <div className="loop_text">{loopType === 0 ? "循环播放" : loopType === 1 ? "单曲循环" : "随机播放"}</div> : ''
+          }
+          {
+            showVolumeProcess ? 
+            <div className="volumeProcess">
+              <Slider value={volumeValue} 
+                onChange={volumeChange}
+                vertical
+                tooltipVisible/>
+            </div> : ''
+          }
+          
         </div>
         <audio ref={audioRef} 
           onTimeUpdate={e => updateTime(e)}

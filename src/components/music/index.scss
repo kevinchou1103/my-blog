@@ -50,6 +50,9 @@
         width: 35px;
         height: 35px;
         margin: 6px 15px 0 0;
+        img {
+          cursor: pointer;
+        }
       }
       .d-info {
         .song {
@@ -117,6 +120,7 @@
       display: flex;
       align-items: center;
       margin-top: 10px;
+      position: relative;
       width: 126px;
       span {
         height: 25px;
@@ -143,6 +147,45 @@
       }
       .icn-shuffle {
         background-position: -66px -248px;
+      }
+      .loop_text {
+        position: absolute;
+        bottom: 50px;
+        width: 81px;
+        text-align: center;
+        line-height: 34px;
+        background: #262626;
+        border: 2px solid #1f1f1f;
+        z-index: 2;
+        border-radius: 5px;
+        color: #fff;
+      }
+      .volumeProcess {
+        position: absolute;
+        bottom: 45px;
+        left: -5px  ;
+        background: #262626;
+        .ant-slider {
+          height: 88px;
+          margin: 15px 10px 6px;
+          .ant-slider-rail {
+            background: #8c8c8c;
+          }
+          .ant-slider-track {
+            background: #f5222d;
+          }
+  
+          .ant-slider-handle {
+            width: 14px;
+            height: 14px;
+            border: none;
+            margin-top: -5px;
+            background-image: url("~@/assets/img/sprite_icon.png");
+            background-repeat: no-repeat;
+            background-position: -4px -254px;
+            // background: url("~@/assets/img/sprite_icon.png") 0 -250px;
+          }
+        }
       }
     }
   }

@@ -28,3 +28,8 @@ export function formatDate(time, fmt) {
 function padLeftZero(str) {
   return ('00' + str).substr(str.length);
 };
+export function getCookie(name) {
+  const cookieArr = document.cookie.split(';')
+  const cookies = cookieArr.filter(item => item.split('=')[0] == name)
+  return cookies.length ? cookies[1] : 0
+}

@@ -1,9 +1,9 @@
 import Home from './home'
 import Mine from './mine'
-import Music from './music'
+import Login from './login'
 
 export default {
   Home,
   Mine,
-  Music
+  Login
 }
