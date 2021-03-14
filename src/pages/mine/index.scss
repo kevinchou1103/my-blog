@@ -1,0 +1,23 @@
+.Article{
+  background: #fafafa;
+  padding-bottom: 70px;
+  min-height: calc(100vh - 100px);
+  .container {
+    width: 980px;
+    margin: 0 auto;
+    height: 100%;
+    padding-top: 5px;
+    h1 {
+      margin-bottom: 20px;
+    }
+    .btn-box {
+      width: 300px;
+      margin: 10px auto;
+      display: flex;
+      justify-content: space-between;
+      .ant-btn {
+        width: 88px;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { user } from '@/store/actions'
 
 const Login = memo((props) => {
-  const { changeLevel ,level } = props
+  const { changeLevel } = props
   const layout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },

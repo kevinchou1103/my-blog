@@ -1,4 +1,4 @@
-import React, { memo ,useEffect } from 'react'
+import React, { memo } from 'react'
 import { connect } from 'react-redux'
 import { Link , withRouter} from 'react-router-dom'
 import { Input, Avatar } from 'antd'

@@ -6,4 +6,4 @@
 
 ### `yarn eject` ### `yarn test`
 
-react管理 -> react-router-config
+router管理 -> react-router-config renderRoutes
