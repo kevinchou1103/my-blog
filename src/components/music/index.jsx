@@ -11,10 +11,13 @@ import {
 } from '@/utils/format-utils'
 
 import MusicList from "./music-list";
+import { connect } from 'react-redux';
 
 let showLoopTextTimer = null // 循环提示文字延时关闭
 
-export default memo(function BlogMusic() {
+const BlogMusic = memo((props) => {
+  const { level } = props
+
   const audioRef = useRef()
   const [playing, setPlaying] = useState(false)
   const [audioData, setAudioData] = useState({}) // 获取到的音乐信息
@@ -27,7 +30,7 @@ export default memo(function BlogMusic() {
   const [list2, setList2] = useState([])
   const [currentList, setCurrentList] = useState(0) // 当前音乐列表
   const [currentIndex, setCurrentIndex] = useState(0) // 当前音乐列表歌曲
-  const [loopType, setLoopType] = useState(0)  // 音乐循环 0列表循环 1单曲循环 2随机循环
+  const [loopType, setLoopType] = useState(2)  // 音乐循环 0列表循环 1单曲循环 2随机循环
   const [showLoopText, setShowLoopText] = useState(false)
   const [volumeValue, setVolumeValue] = useState(100) // 当前音乐音量
   const [showVolumeProcess, setShowVolumeProcess] = useState(false)
@@ -76,7 +79,7 @@ export default memo(function BlogMusic() {
       }).then(res => {
         // console.log(res.songs[0])
         setAudioData(res.songs[0])
-        playMusic()
+        if(level) playMusic()
       })
     }
   }, [songsId])
@@ -164,7 +167,7 @@ export default memo(function BlogMusic() {
   }
 
   return (
-    <div className="blog-music sprite_player">
+    <div className={classNames(level ? '' : 'none',"blog-music","sprite_player")}>
       <div className="content">
         <div className="control">
           <span className="prev sprite_player" onClick={e => playPreMusic('pre')}></span>
@@ -229,3 +232,8 @@ export default memo(function BlogMusic() {
     </div>
   )
 })
+
+const mapStateToProps = state => ({
+  level: state.user.level
+})
+export default connect(mapStateToProps)(BlogMusic)

@@ -1,0 +1,39 @@
+.Header {
+  height: 65px;
+  width: 100%;
+  $color :#1890ff;
+  .content{
+    margin: 0 auto;
+    width: 980px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .toHome {
+      font-size: 28px;
+      a{
+        color: $color;
+      }
+    }
+    .ant-input-group-wrapper {
+      width: 460px;
+    }
+    .user {
+      display: flex;
+      align-items: center;
+      .ant-avatar {
+        background: $color;
+        margin-right: 10px;
+      }
+      div {
+        cursor: pointer;
+        color: #000;
+        font-size: 18px;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+    }
+    
+  }
+}

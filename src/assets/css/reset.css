@@ -44,3 +44,6 @@ img {
 .sprite_player {
   background-image: url("~@/assets/img/playbar_sprite.png");
 }
+.none {
+  display: none;
+}

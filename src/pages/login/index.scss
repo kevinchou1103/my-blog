@@ -1,0 +1,13 @@
+.Login {
+  margin: 0 auto;
+  width: 500px;
+  .login-form {
+    margin-top: 50px;
+  }
+  .login-btn{
+    width: 100%;
+    .ant-btn {
+      margin-right: 20%;
+    }
+  }
+}

@@ -156,7 +156,7 @@
         line-height: 34px;
         background: #262626;
         border: 2px solid #1f1f1f;
-        z-index: 2;
+        z-index: 3;
         border-radius: 5px;
         color: #fff;
       }
@@ -164,6 +164,7 @@
         position: absolute;
         bottom: 45px;
         left: -5px  ;
+        z-index: 2;
         background: #262626;
         .ant-slider {
           height: 88px;

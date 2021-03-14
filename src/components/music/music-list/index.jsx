@@ -1,4 +1,4 @@
-import React, { memo , useState, useEffect} from 'react'
+import React, { memo , useState, useEffect, useRef} from 'react'
 import {
   formatDate,
 } from '@/utils/format-utils'
@@ -19,8 +19,18 @@ export default memo(function Index(props) {
     changeMusic(id,i,index)
   }
 
+  const listRef0 = useRef()
+  const listRef1 = useRef()
+
   const [currentList, setCurrentList] = useState(0)
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    let listDom = musicList === 0 ? listRef0 : listRef1
+    let scrollY = musicIndex > 4 ? (musicIndex - 4) * 29 : 0
+    listDom.current.scrollTo(0, musicIndex > 4 ? (musicIndex - 4) * 29 : 0)
+    console.log(scrollY)
+  },[])
 
   useEffect(() => {
     setCurrentList(musicList)
@@ -38,7 +48,7 @@ export default memo(function Index(props) {
           {
             list.map((v,i) => {
               return (
-                <ul key={i}>
+                <ul key={i} ref={i === 0 ? listRef0 : listRef1}>
                   {
                     v.map((item,index) => {
                       return (

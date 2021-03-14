@@ -1,6 +1,8 @@
 export const USER = 'USER'
 
-const user = (power) => {
-  type = USER,
-  power
+export const user = (level) => {
+  return {
+    type: USER,
+    level: level
+  }
 }

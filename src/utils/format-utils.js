@@ -30,6 +30,8 @@ function padLeftZero(str) {
 };
 export function getCookie(name) {
   const cookieArr = document.cookie.split(';')
-  const cookies = cookieArr.filter(item => item.split('=')[0] == name)
-  return cookies.length ? cookies[1] : 0
+  const cookies = cookieArr.map(item => {
+    if(item.split('=')[0] === name) return item.split('=')[1]
+  })
+  return cookies.length ? cookies[0] : 0
 }

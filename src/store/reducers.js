@@ -1,22 +1,40 @@
-import { combinReducers } from 'redux'
+import { combineReducers } from 'redux'
 
-import { getCookie } from '../utils/format-utils'
 import {
   USER
 } from './actions'
 
-const info = getCookie('user')
+import { getCookie } from '@/utils/format-utils'
+
+const defaultState = {
+  level : parseInt(getCookie('user_level'))
+}
+
 function user(
-  state = {power: info},
+  state = defaultState,
   action
 ) {
   switch (action.type) {
     case USER: 
+      return {...state, level: action.level}
+    default:
       return state
   }
 }
 
+function data(
+  state = defaultState,
+  action
+) {
+  switch (action.type) {
+    case 'DATA': 
+      return {...state, data: action.data}
+    default:
+      return state
+  }
+}
 
-export default combinReducers({
-  user
+export default combineReducers({
+  user,
+  data
 })
