@@ -39,6 +39,7 @@ const BlogMusic = memo((props) => {
   const singerName = (audioData.ar && audioData.ar[0].name) || '未知'
 
   useEffect(() => {
+    if (!level) return
     // 热歌榜单
     MusicRequest({
       // url: `/playlist/detail/dynamic`,
@@ -66,7 +67,7 @@ const BlogMusic = memo((props) => {
     }).then(res => {
       setList2(res.playlist.tracks)
     })
-  },[])
+  },[level])
 
   useEffect(() => {
     if(list1.length) {
@@ -130,14 +131,14 @@ const BlogMusic = memo((props) => {
       playPreMusic('next')
     }
   }
-  const changeMusic = (value,list,index) => {
+  const changeMusic = useCallback((value,list,index) => {
     if(value !== songsId) {
       setPlaying(false)
       setSongId(value)
     }
     setCurrentList(list)
     setCurrentIndex(index)
-  }
+  },[songsId])
   const playPreMusic = (type) => {
     let list = currentList === 0 ? list1 : list2
     let index = 0
@@ -167,70 +168,77 @@ const BlogMusic = memo((props) => {
   }
 
   return (
-    <div className={classNames(level ? '' : 'none',"blog-music","sprite_player")}>
-      <div className="content">
-        <div className="control">
-          <span className="prev sprite_player" onClick={e => playPreMusic('pre')}></span>
-          <span className={classNames(playing ? 'pause' : 'play',"play sprite_player")} onClick={e => playMusic()}></span>
-          <span className="next sprite_player" onClick={e => playPreMusic('next')}></span>
-        </div>
-        <div className="detail">
-          <div className="d-image">
-            <img src={getSizeImage(imgUrl, 35)} onClick={_ => setShowList(!showList)}/>
-          </div>   
-          <div className="d-info">
-            <div className="song">
-              <span>{audioData.name}</span>
-              <a>{singerName}</a>
-            </div>
-            <div className="progress">
-              <Slider value={progress} 
-                onChange={sliderChange}
-                onAfterChange={sliderAfterChange}/>
-              <div className="time">
-                <span className="now-time">{formatDate(currentTime, "mm:ss")}</span>
-                <span className="divider">/</span>
-                <span className="duration">{formatDate(audioData.dt, "mm:ss")}</span>
-              </div>
-            </div>
-          </div>       
-        </div>
-        <div className="setting">
-          <span className="sprite_player volume" onClick = {_ => setShowVolumeProcess(!showVolumeProcess)}></span>
-          <span className={classNames(loopType === 0 ? "icn-loop" : loopType === 1 ? "icn-one" : "icn-shuffle"
-            ,"sprite_player")} onClick={e => setLoopType(_ => loopType === 2 ? 0 : loopType + 1)}></span>
-          <span className="sprite_player playlist" onClick={_ => setShowList(!showList)}>
-            {list1.length + list2.length}
-          </span>
-          {
-            showLoopText ? <div className="loop_text">{loopType === 0 ? "循环播放" : loopType === 1 ? "单曲循环" : "随机播放"}</div> : ''
-          }
-          {
-            showVolumeProcess ? 
-            <div className="volumeProcess">
-              <Slider value={volumeValue} 
-                onChange={volumeChange}
-                vertical
-                tooltipVisible/>
-            </div> : ''
-          }
-          
-        </div>
-        <audio ref={audioRef} 
-          onTimeUpdate={e => updateTime(e)}
-          onEnded={e => endPlaying()}/>
-      </div>
+      <>
       {
-        showList ? 
-        <MusicList 
-          list = {[list1,list2]}
-          changeMusic = {changeMusic}
-          musicList = {currentList}
-          musicIndex = {currentIndex}
-        />: ''
+        level ? 
+        <div className={classNames("blog-music","sprite_player")}>
+          <div className="content">
+            <div className="control">
+              <span className="prev sprite_player" onClick={e => playPreMusic('pre')}></span>
+              <span className={classNames(playing ? 'pause' : 'play',"play sprite_player")} onClick={e => playMusic()}></span>
+              <span className="next sprite_player" onClick={e => playPreMusic('next')}></span>
+            </div>
+            <div className="detail">
+              <div className="d-image">
+                <img src={getSizeImage(imgUrl, 35)} onClick={_ => setShowList(!showList)}/>
+              </div>   
+              <div className="d-info">
+                <div className="song">
+                  <span>{audioData.name}</span>
+                  <a>{singerName}</a>
+                </div>
+                <div className="progress">
+                  <Slider value={progress} 
+                    onChange={sliderChange}
+                    onAfterChange={sliderAfterChange}/>
+                  <div className="time">
+                    <span className="now-time">{formatDate(currentTime, "mm:ss")}</span>
+                    <span className="divider">/</span>
+                    <span className="duration">{formatDate(audioData.dt, "mm:ss")}</span>
+                  </div>
+                </div>
+              </div>       
+            </div>
+            <div className="setting">
+              <span className="sprite_player volume" onClick = {_ => setShowVolumeProcess(!showVolumeProcess)}></span>
+              <span className={classNames(loopType === 0 ? "icn-loop" : loopType === 1 ? "icn-one" : "icn-shuffle"
+                ,"sprite_player")} onClick={e => setLoopType(_ => loopType === 2 ? 0 : loopType + 1)}></span>
+              <span className="sprite_player playlist" onClick={_ => setShowList(!showList)}>
+                {list1.length + list2.length}
+              </span>
+              {
+                showLoopText ? <div className="loop_text">{loopType === 0 ? "循环播放" : loopType === 1 ? "单曲循环" : "随机播放"}</div> : ''
+              }
+              {
+                showVolumeProcess ? 
+                <div className="volumeProcess">
+                  <Slider value={volumeValue} 
+                    onChange={volumeChange}
+                    vertical
+                    tooltipVisible/>
+                </div> : ''
+              }
+              
+            </div>
+            <audio ref={audioRef} 
+              onTimeUpdate={e => updateTime(e)}
+              onEnded={e => endPlaying()}/>
+          </div>
+          {
+            showList ? 
+            <MusicList 
+              list = {[list1,list2]}
+              changeMusic = {changeMusic}
+              musicList = {currentList}
+              musicIndex = {currentIndex}
+            />: ''
+          }
+        </div>
+        :''
       }
-    </div>
-  )
+      
+      </>
+    )
 })
 
 const mapStateToProps = state => ({

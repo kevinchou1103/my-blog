@@ -5,7 +5,7 @@ import {
 
 import './index.scss'
 
-export default memo(function Index(props) {
+export default memo((props) => {
   const { 
     list, 
     changeMusic, 
