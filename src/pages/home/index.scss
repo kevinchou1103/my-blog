@@ -1,5 +1,69 @@
-.home{
-  h1{
-    color: red;
+.Home{
+  width: 980px;
+  margin: 20px auto;
+  display: flex;
+  justify-content: space-between;
+  .content {
+    background: #fff;
+    padding: 0 20px;
+    flex: 1;
+    li {
+      height: 168px;
+      p {
+        color: #333;
+        letter-spacing: 1px;
+      }
+      .title {
+        margin-top: 20px;
+        height: 26px;
+        line-height: 26px;
+        font-weight: 600;
+        font-size: 20px;
+        
+      }
+      .body {
+        margin-top: 17px;
+        font-size: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-all;
+      }
+      .art-info {
+        height: 72px;
+        line-height: 72px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        .user {
+          &>span {
+            margin-right: 10px;
+          }
+        }
+        .time {
+          display: flex;
+          justify-content: space-between;
+          width: 180px;
+          span {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+  .nav {
+    background: #fff;
+    margin-left: 20px;
+    width: 30%;
+    min-width: 280px;
+    padding-left: 15px;
+    li {
+      line-height: 60px;
+      border-bottom: 1px solid #eee;
+      font-size: 18px;
+      
+    }
   }
 }
