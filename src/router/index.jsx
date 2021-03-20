@@ -1,38 +1,28 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
+import React, {memo} from 'react'
+
+import { connect } from 'react-redux'
+import { Switch ,Route, Redirect } from 'react-router'
+import { renderRoutes } from 'react-router-config'
+
+import route_data from './router.config'
 import pages from '@/pages'
 
-const MBHome = React.lazy(_ => import('@/pages/home'));
-const MBMine = React.lazy(_ => import('@/pages/mine'));
-const MBLogin = React.lazy(_ => import('@/pages/login'));
-const MBNoPage = React.lazy(_ => import('@/pages/noPage'));
+const Routes = memo((props) => {
+  const { level = 0 } = props
+  
+  return !level ? 
+    <Switch>
+      <Route path="/login" component={pages.Login}></Route>
+      <Route path="/404" component={pages.NoPage}></Route>
+      <Redirect from="/*" to='/404'></Redirect>
+    </Switch>
+    :
+    <>
+      {renderRoutes(route_data)}
+    </>
+})
 
-const routes = [
-  {
-    path: '/',
-    exact: true,
-    render: () => (<Redirect to="login"/>)
-  },
-  {
-    path: '/home',
-    component: MBHome
-  },
-  {
-    path: '/login',
-    component: MBLogin
-  },
-  {
-    path: '/mine',
-    component: MBMine
-  },
-  {
-    path: '/404',
-    component: MBNoPage
-  },
-  {
-    path: '/',
-    render: () => (<Redirect to="/404"/>)
-  },
-]
-
-export default routes
+const mapStateToProps = state => ({
+  level: state.user.level
+})
+export default connect(mapStateToProps)(Routes)

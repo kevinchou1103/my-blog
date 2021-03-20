@@ -10,6 +10,7 @@ import { Provider } from 'react-redux'
 import Header from '@/components/header'
 import FooterMusic from '@/components/music'
 import store from '@/store/store'
+import Routes from '@/router'
 
 export default memo(function App() {
   return (
@@ -17,7 +18,7 @@ export default memo(function App() {
       <Provider store={store}>
         <Header />
         <Suspense fallback={<div>page loading</div>}>
-          {renderRoutes(routes)}
+          <Routes />
         </Suspense>
         <FooterMusic />
       </Provider>
