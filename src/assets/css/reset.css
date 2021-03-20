@@ -39,7 +39,9 @@ img {
   border: none;
   vertical-align: middle;
 }
-
+body {
+  background: #f4f5f6
+}
 /* 全局样式 */
 .sprite_player {
   background-image: url("~@/assets/img/playbar_sprite.png");
